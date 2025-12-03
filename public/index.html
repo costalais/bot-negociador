@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Bot Negociador WhatsApp</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f2f5;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+    }
+    .container {
+      background: #fff;
+      margin-top: 40px;
+      padding: 20px 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      width: 500px;
+    }
+    h1 {
+      text-align: center;
+      color: #075e54;
+      margin-bottom: 20px;
+    }
+    #status {
+      text-align: center;
+      font-weight: bold;
+      margin-bottom: 15px;
+      padding: 10px;
+      border-radius: 6px;
+      background: #e9f7ef;
+      color: #2e7d32;
+    }
+    #qr {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    #qr img {
+      width: 220px;
+      border: 2px solid #ccc;
+      border-radius: 8px;
+      padding: 5px;
+      background: #fff;
+    }
+    h2 {
+      color: #333;
+      margin-bottom: 10px;
+    }
+    #mensagens {
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      padding: 10px;
+      height: 250px;
+      overflow-y: auto;
+      background: #fafafa;
+    }
+    .msg {
+      margin-bottom: 8px;
+      padding: 6px 8px;
+      border-radius: 5px;
+      background: #e1f5fe;
+      color: #0277bd;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🤖 Bot Negociador WhatsApp</h1>
+    <div id="status">⏳ Aguardando geração do QR Code...</div>
+    <div id="qr"><p>O QR Code aparecerá aqui.</p></div>
+
+    <h2>Painel de mensagens</h2>
+    <div id="mensagens"></div>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io();
+
+    socket.on('status', msg => {
+      document.getElementById('status').innerText = msg;
+    });
+
+    socket.on('qr', qr => {
+      document.getElementById('qr').innerHTML = `<img src="${qr}" alt="QR Code"/>`;
+    });
+
+    socket.on('mensagem', msg => {
+      const painel = document.getElementById('mensagens');
+      painel.innerHTML += `<div class="msg">${msg}</div>`;
+      painel.scrollTop = painel.scrollHeight;
+    });
+  </script>
+</body>
+</html>
